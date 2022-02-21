@@ -1,25 +1,59 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import Coin from "./Coin";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      numHeads: 0,
+      numTails: 0,
+      coinFace: "",
+    };
+  }
+  coinToss() {
+    const face = Math.floor(Math.random() * 2) ? "Heads" : "Tails";
+    this.setState({
+      coinFace: face,
+    });
+    if (face === "Heads") {
+      this.setState((state, props) => {
+        return {
+          numHeads: state.numHeads + 1,
+        };
+      });
+    } else {
+      this.setState((state, props) => {
+        return {
+          numTails: state.numTails + 1,
+        };
+      });
+    }
+  }
+  handleEvent(e) {
+    this.coinToss();
+  }
+  render() {
+    this.handleEvent = this.handleEvent.bind(this);
+    return (
+      <div className="App">
+        <h2>Let's flip a coin</h2>
+        {this.state.numHeads + this.state.numTails !== 0 && (
+          <Coin face={this.state.coinFace} />
+        )}
+
+        <button className="btn-toss" onClick={this.handleEvent}>
+          Flip me!!!
+        </button>
+        {this.state.numHeads + this.state.numTails !== 0 && (
+          <p>
+            Out of {this.state.numHeads + this.state.numTails} flips, there have
+            been {this.state.numHeads} heads and {this.state.numTails} tails.
+          </p>
+        )}
+      </div>
+    );
+  }
 }
 
 export default App;
